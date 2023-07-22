@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 function SearchField({ runSearch, selectedShow, setSelectedShow }) {
   const BarStyle = { width: "20rem", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem" };
-  const selectStyle = { width: "15rem", height: "44px", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem", marginRight: "10px", marginLeft: "10px" };
+  const selectStyle = { width: "18rem", height: "44px", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem", marginRight: "10px", marginLeft: "10px", marginBottom: "5px" };
 
   const [searchTerm, setSearchTerm] = React.useState("")
   return (

@@ -6,7 +6,8 @@ function SearchResults({ results, selectedShow }) {
   console.log(results);
   return (
     <div className='container mx-auto p-5'>
-      <div className='grid gap-4 grid-cols-3 grid-rows-3'>
+      {/* <div className='grid gap-4 grid-cols-3 grid-rows-3 sm:grid-cols-1'> */}
+      <div className='grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
         {results?.map((result, index) => (
           <SingleResult
             key={result.episode_id + result.line_number}

@@ -17,7 +17,7 @@ function Home() {
   function runSearch(selectedShow, searchTerm) {
     //console.log(process.env.REACT_APP_AUTH_TOKEN)
     setLoading(true)
-    const limit = 15
+    const limit = 12
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -37,8 +37,10 @@ function Home() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
+      <h1
+        className="text-3xl font-bold pt-2"
+        style={{ font: "Mona Sans", fontWeight: "800", fontStretch: "125%" }}>
+        Moment Seeker
       </h1>
       <SearchField runSearch={runSearch} selectedShow={selectedShow} setSelectedShow={setSelectedShow} />
       {loading ? (

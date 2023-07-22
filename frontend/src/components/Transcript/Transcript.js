@@ -51,6 +51,7 @@ const Transcript = () => {
 
   }, [transcriptData])
 
+  // TODO: redo design with mobile thinking
   return (
     <div className='px-40 container md mx-auto'>
       <h1 className="text-3xl font-bold underline py-2">Transcript of {episodeId}</h1>
@@ -70,11 +71,11 @@ const Transcript = () => {
             <div className='flex justify-items-start content-evenly gap-4 border rounded-sm' key={index}>
               <div
                 className='text-gray-700 pl-4 basis-1/1 bg-emerald-300'
-                style={{ flexBasis: "300px" }}
+                style={{ flexBasis: "300px", color: "#4F200D" }}
               >{line.line_number} : {line.timecode}</div>
               <div
                 className='text-lg pl-8 basis-1/8'
-                style={{ marginLeft: "none", backgroundColor: "pink" }}
+                style={{ marginLeft: "none", backgroundColor: "pink", color: "#4F200D" }}
               >{line.content}</div>
             </div>
           )
