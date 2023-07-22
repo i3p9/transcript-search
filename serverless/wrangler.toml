@@ -1,0 +1,8 @@
+name = "serverless"
+main = "src/worker.js"
+compatibility_date = "2023-07-17"
+
+[vars]
+MONGO_URL="https://ap-south-1.aws.data.mongodb-api.com/app/data-oodeg/endpoint/data/v1/action"
+API_KEY="pzh7NxoetoibW35ypELndpCIlSMMPNGdBuA6d59sRllE3lZqE7O6B0m1fW0J42zY"
+ACCEPTED_KEY="ELq2zTogAx0k6g4dTkj4XXiBek0In5i9"

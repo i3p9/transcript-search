@@ -1,6 +1,6 @@
 const prod = {
     url: {
-        API_URL: 'https://transcript-search.onrender.com',
+        API_URL: 'https://serverless.fhm.workers.dev/',
         BASE_URL: 'https://findthemoment.vercel.app'
     }
 };

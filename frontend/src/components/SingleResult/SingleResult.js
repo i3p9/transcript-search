@@ -32,8 +32,9 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     axios.request(config)
       .then((response) => {
         console.log('search succ??');
-        console.log(response.data)
-        setContextLine(response.data);
+        console.log(response.data.documents)
+        //setting data.documents to accomodate cf worker
+        setContextLine(response.data.documents);
       })
       .catch((error) => {
         console.log(error);
