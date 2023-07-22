@@ -11,6 +11,9 @@ app = FastAPI()
 uri = config["MONGO_URI"]
 accepted_key = config["ACCEPTED_KEY"]
 
+# uri = os.environ.get("MONGO_URI")
+# accepted_key = os.environ.get("ACCEPTED_KEY")
+
 client = MongoClient(uri, server_api=ServerApi("1"))
 db = client["dev"]
 
