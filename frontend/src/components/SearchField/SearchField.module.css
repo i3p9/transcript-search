@@ -1,0 +1,13 @@
+.textSearchInput {
+  border: 5px solid salmon;
+}
+
+.textSearchInput:focus {
+  border: 2x solid black !important;
+}
+
+.searchButton {
+  background-color: #4f200d;
+  color: white;
+  height: 44px;
+}
