@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { config } from '../../Constants'
 
-const apiUrl = config.url.API_URL;
-
+const apiUrl = config.url.API_URL
+const token = process.env.REACT_APP_AUTH_TOKEN
 
 function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }) {
   const [isHovering, setIsHovering] = React.useState(false)
@@ -26,7 +26,7 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${apiUrl}/${selectedShow}/context?episode_id=${episodeId}&line_number=${lineNumber}&auth=ELq2zTogAx0k6g4dTkj4XXiBek0In5i9`,
+      url: `${apiUrl}/${selectedShow}/context?episode_id=${episodeId}&line_number=${lineNumber}&auth=${token}`,
       headers: {}
     };
     axios.request(config)

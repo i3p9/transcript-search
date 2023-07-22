@@ -6,6 +6,7 @@ import Skeleton from '../Skeleton'
 import { config } from '../../Constants'
 
 const apiUrl = config.url.API_URL;
+const token = process.env.REACT_APP_AUTH_TOKEN
 
 function Home() {
   const [selectedShow, setSelectedShow] = React.useState('sunny')
@@ -14,13 +15,13 @@ function Home() {
 
   //TODO Secrect imple,ent via env
   function runSearch(selectedShow, searchTerm) {
-    console.log(apiUrl)
+    //console.log(process.env.REACT_APP_AUTH_TOKEN)
     setLoading(true)
     const limit = 15
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${apiUrl}/${selectedShow}/search?q=${searchTerm}&limit=${limit}&auth=ELq2zTogAx0k6g4dTkj4XXiBek0In5i9`,
+      url: `${apiUrl}/${selectedShow}/search?q=${searchTerm}&limit=${limit}&auth=${token}`,
       headers: {}
     };
     axios.request(config)
