@@ -30,3 +30,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 serverless/.dev.vars
+serverless/wrangler.toml
+serverless/wrangler.toml
+wrangler.toml
