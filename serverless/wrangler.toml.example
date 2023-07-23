@@ -1,0 +1,8 @@
+name = "serverless"
+main = "src/worker.js"
+compatibility_date = "2023-07-17"
+
+[vars]
+MONGO_URL="your_url_here"
+API_KEY="your_api_here"
+ACCEPTED_KEY="your_key_here"

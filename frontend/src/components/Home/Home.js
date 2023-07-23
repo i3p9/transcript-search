@@ -26,9 +26,9 @@ function Home() {
     };
     axios.request(config)
       .then((response) => {
-        //console.log('search succ??');
         setLoading(false)
-        setResult(response.data);
+        //setting data.documents to accomodate cf worker
+        setResult(response.data.documents);
       })
       .catch((error) => {
         console.log(error);
