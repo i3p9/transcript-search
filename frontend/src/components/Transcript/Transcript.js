@@ -53,7 +53,7 @@ const Transcript = () => {
 
   // TODO: redo design with mobile thinking
   return (
-    <div className='px-40 container md mx-auto'>
+    <div className='px-20 sm:px-3 md:px-10 container md mx-auto'>
       <h1 className="text-3xl font-bold underline py-2">Transcript of {episodeId}</h1>
       <h2>{episodeData?.name}</h2>
       <h2>Episode overview: {episodeData?.overview}</h2>
