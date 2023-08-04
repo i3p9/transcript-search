@@ -68,13 +68,13 @@ const Transcript = () => {
 
         } else { //regular transcript
           return (
-            <div className='flex justify-items-start content-evenly gap-4 border rounded-sm' key={index}>
+            <div className='flex flex-col md:flex-row justify-items-start content-evenly border rounded-md' key={index}>
               <div
-                className='text-gray-700 pl-4 basis-1/1 bg-emerald-300'
-                style={{ flexBasis: "300px", color: "#4F200D" }}
+                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1 bg-emerald-300'
+                style={{ color: "#4F200D" }}
               >{line.line_number} : {line.timecode}</div>
               <div
-                className='text-lg pl-8 basis-1/8'
+                className='text-lg pl-2 basis-3/4 md:basis-1/8'
                 style={{ marginLeft: "none", backgroundColor: "pink", color: "#4F200D" }}
               >{line.content}</div>
             </div>
