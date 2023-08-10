@@ -27,6 +27,7 @@ const Transcript = () => {
         console.log(error);
         // Handle errors here
       });
+    //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -53,16 +54,45 @@ const Transcript = () => {
 
   // TODO: redo design with mobile thinking
   return (
-    <div className='px-20 sm:px-3 md:px-10 container md mx-auto'>
-      <h1 className="text-3xl font-bold underline py-2">Transcript of {episodeId}</h1>
-      <h2>{episodeData?.name}</h2>
-      <h2>Episode overview: {episodeData?.overview}</h2>
+    <div className='px-5 sm:px-3 md:px-10 container md mx-auto py-2'>
+      <div
+        className='py-0'
+        style={{ border: "2px solid #4F200D", marginBottom: "10px" }}
+      >
+        <h1
+          className="text-3xl font-bold py-2"
+          style={{ fontStretch: "80%" }}
+        >
+          Transcript of {episodeId}</h1>
+        <h2
+          className='text-2xl'
+          style={{ fontWeight: 600, fontStretch: "90%" }}
+        >
+          {episodeData?.name}
+        </h2>
+        <h2
+          style={{ fontWeight: 400, fontStretch: "110%", fontStyle: "italic" }}
+        >
+          Episode overview: {episodeData?.overview}
+        </h2>
+      </div>
       {transcriptData?.map((line, index) => {
         if (line.line_number === parseInt(variable)) {
           return ( //highlighted line
-            <div className='pt-2 border border-double rounded-md w-70 bg-slate-300' key={index} id='highlighed-line'>
-              <p className='text-red-400'>{line.line_number} : {line.timecode}</p>
-              <div className='text-lg text-red-400'>{line.content}</div>
+            <div
+              className='flex flex-col md:flex-row justify-items-start content-evenly rounded-md'
+              style={{ border: "4px dashed #FF8400" }}
+              key={index}
+              id='highlighed-line'
+            >
+              <div
+                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1'
+                style={{ color: "#4F200D", backgroundColor: "#FFD93D" }}
+              >{line.line_number} : {line.timecode}</div>
+              <div
+                className='text-lg pl-2 basis-3/4 md:basis-1/8'
+                style={{ marginLeft: "none", backgroundColor: "rgba(79, 32, 13, 0.1)", color: "#4F200D" }}
+              >{line.content}</div>
             </div>
           )
 
@@ -70,12 +100,12 @@ const Transcript = () => {
           return (
             <div className='flex flex-col md:flex-row justify-items-start content-evenly border rounded-md' key={index}>
               <div
-                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1 bg-emerald-300'
-                style={{ color: "#4F200D" }}
+                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1'
+                style={{ color: "#4F200D", backgroundColor: "#FFD93D" }}
               >{line.line_number} : {line.timecode}</div>
               <div
                 className='text-lg pl-2 basis-3/4 md:basis-1/8'
-                style={{ marginLeft: "none", backgroundColor: "pink", color: "#4F200D" }}
+                style={{ marginLeft: "none", backgroundColor: "rgba(79, 32, 13, 0.1)", color: "#4F200D" }}
               >{line.content}</div>
             </div>
           )
