@@ -1,12 +1,12 @@
 const prod = {
     url: {
         API_URL: 'https://serverless.fhm.workers.dev/',
-        BASE_URL: 'https://findthemoment.vercel.app'
+        BASE_URL: 'https://momentseeker.vercel.app'
     }
 };
 const dev = {
     url: {
-        API_URL: 'http://localhost:8888',
+        API_URL: 'https://serverless.fhm.workers.dev/',
         BASE_URL: 'http://localhost:3000'
     }
 };
