@@ -2,8 +2,23 @@ import React from 'react';
 //import styles from './SearchResults.module.css'
 import SingleResult from '../SingleResult'
 
-function SearchResults({ results, selectedShow }) {
-  console.log(results);
+function SearchResults({ results, selectedShow, networkError }) {
+  if (networkError) {
+    return (
+      <div className='container mx-auto p-5'>
+        <p>Network error, please try again later.</p>
+      </div>
+    );
+  }
+
+  if (results?.length === 0) {
+    return (
+      <div className='container mx-auto p-5'>
+        <p>No results found.</p>
+      </div>
+    );
+  }
+
   return (
     <div className='container mx-auto p-5'>
       {/* <div className='grid gap-4 grid-cols-3 grid-rows-3 sm:grid-cols-1'> */}
