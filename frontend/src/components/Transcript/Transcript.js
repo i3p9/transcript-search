@@ -54,7 +54,7 @@ const Transcript = () => {
 
   // TODO: redo design with mobile thinking
   return (
-    <div className='px-5 sm:px-3 md:px-10 container md mx-auto py-2'>
+    <div className='px-5 sm:px-3 md:px-10 container md mx-auto py-2 mb-10'>
       <div
         className='py-0'
         style={{ border: "2px solid #4F200D", marginBottom: "10px" }}
@@ -80,8 +80,8 @@ const Transcript = () => {
         if (line.line_number === parseInt(variable)) {
           return ( //highlighted line
             <div
-              className='flex flex-col md:flex-row justify-items-start content-evenly rounded-md'
-              style={{ border: "4px dashed #FF8400" }}
+              className='flex flex-col md:flex-row justify-items-start content-evenly'
+              style={{ border: "2px solid #FF8400", borderRadius: "0px" }}
               key={index}
               id='highlighed-line'
             >
@@ -98,7 +98,7 @@ const Transcript = () => {
 
         } else { //regular transcript
           return (
-            <div className='flex flex-col md:flex-row justify-items-start content-evenly border rounded-md' key={index}>
+            <div className='flex flex-col md:flex-row justify-items-start content-evenly border' key={index}>
               <div
                 className='text-gray-700 pl-2 basis-1/4 md:basis-1/1'
                 style={{ color: "#4F200D", backgroundColor: "#FFD93D" }}
