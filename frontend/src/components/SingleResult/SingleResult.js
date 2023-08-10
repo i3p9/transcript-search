@@ -52,6 +52,7 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
         console.log(error);
         // Handle errors here
       });
+    //eslint-disable-next-line
   }, []);
 
   console.log(currentEpisodeInfo)
