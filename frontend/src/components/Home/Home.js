@@ -12,6 +12,7 @@ function Home() {
   const [selectedShow, setSelectedShow] = React.useState('sunny')
   const [result, setResult] = React.useState()
   const [loading, setLoading] = React.useState(false)
+  const [networkError, setNetworkError] = React.useState(false)
 
   //TODO Secrect imple,ent via env
   function runSearch(selectedShow, searchTerm) {
@@ -27,11 +28,14 @@ function Home() {
     axios.request(config)
       .then((response) => {
         setLoading(false)
+        setNetworkError(false)
         //setting data.documents to accomodate cf worker
         setResult(response.data.documents);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false)
+        setNetworkError(true)
       });
   }
 
@@ -46,7 +50,7 @@ function Home() {
       {loading ? (
         <Skeleton />
       ) : (
-        <SearchResults results={result} selectedShow={selectedShow} />
+        <SearchResults results={result} selectedShow={selectedShow} networkError={networkError} />
       )}
     </div>
   );
