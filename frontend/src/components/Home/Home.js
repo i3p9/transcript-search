@@ -5,7 +5,7 @@ import SearchField from '../SearchField'
 import Skeleton from '../Skeleton'
 import { config } from '../../Constants'
 
-const apiUrl = config.url.API_URL;
+const apiUrl = config.url.API_URL
 const token = process.env.REACT_APP_AUTH_TOKEN
 
 function Home() {
@@ -22,7 +22,7 @@ function Home() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${apiUrl}/${selectedShow}/search?q=${searchTerm}&limit=${limit}&auth=${token}`,
+      url: `${apiUrl}/arg?show_key=${selectedShow}&q=${searchTerm}&limit=${limit}&auth=${token}`,
       headers: {}
     };
     axios.request(config)

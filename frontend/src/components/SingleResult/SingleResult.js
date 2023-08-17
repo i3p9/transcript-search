@@ -29,7 +29,7 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${apiUrl}/${selectedShow}/context?episode_id=${episodeId}&line_number=${lineNumber}&auth=${token}`,
+      url: `${apiUrl}/context?show_key=${selectedShow}&episode_id=${episodeId}&line_number=${lineNumber}&auth=${token}`,
       headers: {}
     };
     axios.request(config)
