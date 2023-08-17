@@ -6,13 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TVDB_API = os.environ.get("TVDB_API")
+FOLDER_NAME = os.environ.get("FOLDER_NAME")
 
 
 def get_episode_data(season, episode, current, total):
     import requests
 
     api_key = TVDB_API
-    url = f"https://api.themoviedb.org/3/tv/48891/season/{season}/episode/{episode}?api_key={api_key}&language=en-US"
+    tvdb_id = "1420"
+    url = f"https://api.themoviedb.org/3/tv/{tvdb_id}/season/{season}/episode/{episode}?api_key={api_key}&language=en-US"
 
     payload = {}
     headers = {}
@@ -20,8 +22,8 @@ def get_episode_data(season, episode, current, total):
 
     response = requests.request("GET", url, headers=headers, data=payload)
     jsonResponse = response.json()
-    print(jsonResponse)
-    print(f"{current} of {total} processed successfully")
+    # print(jsonResponse)
+    print(f"{current} of {total} processed successfully. last: {episode_id}")
     return {
         episode_id: {
             "name": jsonResponse["name"],
@@ -31,7 +33,7 @@ def get_episode_data(season, episode, current, total):
     }
 
 
-sub_path = f"{os.getcwd()}/b99_hi_48891/"  # put path to subs folder here
+sub_path = f"{os.getcwd()}/{FOLDER_NAME}/"  # put path to subs folder here
 list_of_files = os.listdir(sub_path)
 pattern = r"(S\d+)(E\d+)"
 
@@ -51,10 +53,10 @@ for file in list_of_files:
             season=season, episode=episode, current=current, total=total_episodes
         )
         out.update(data)
-        time.sleep(1)
+        time.sleep(0.5)
         current += 1
 
-output_file = "episode_data_b99.json"
+output_file = f"episode_data_{FOLDER_NAME}.json"
 with open(output_file, "w") as file:
     json.dump(out, file)
 

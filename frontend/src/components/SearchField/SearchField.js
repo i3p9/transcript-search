@@ -26,8 +26,12 @@ function SearchField({ runSearch, selectedShow, setSelectedShow }) {
           }}
         >
           <option value="sunny">It's Always Sunny in Philadelphia</option>
-          <option value="theoffice_us">The Office (US)</option>
-          <option value="brooklyn99">Brooklyn Nine-Nine</option>
+          <option value="office_us">The Office (US)</option>
+          <option value="brooklyn_99">Brooklyn Nine-Nine</option>
+          <option value="30_rock">30 Rock</option>
+          <option value="ted_lasso">Ted Lasso</option>
+          <option value="new_girl">New Girl</option>
+          <option value="parks_and_rec">Parks and Recreation</option>
         </select>
       </label>
 

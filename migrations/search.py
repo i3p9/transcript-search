@@ -12,38 +12,50 @@ uri = MONGO_URI
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi("1"))
-db = client["dev"]
-collection = db["sunny_dev"]
 
-results = collection.rename("sunny")
+# search multi
+q = "feast"
+show_name = "sunny"
 
-# episode_id = "S01E03"
-# line_number = 20
+pipeline = [
+    {
+        "$search": {
+            "index": "lines",
+            "compound": {
+                "must": [{"text": {"query": show_name, "path": "show"}}],
+                "filter": [{"text": {"query": q, "path": "content"}}],
+            },
+        },
+    },
+    {"$limit": 20},
+]
 
-# if line_number:
-#     if line_number > 1:
-#         context_lines = [line_number - 1, int(line_number), line_number + 1]
-#     else:
-#         context_lines = [int(line_number), line_number + 1]
-# else:
-#     print("line_number is a required field")
 
-# if episode_id:
-#     print("quuq")
-#     query = {"episode_id": episode_id, "line_number": {"$in": context_lines}}
-#     results = collection.find(query)
-#     output = []
-#     for item in results:
-#         output.append(
-#             {
-#                 "line_number": item["line_number"],
-#                 "episode_id": item["episode_id"],
-#                 "timecode": item["timecode"],
-#                 "content": item["content"],
-#             }
-#         )
+result = client["searchData"]["all"].aggregate(pipeline)
 
-#     print(output)
+output = []
+for item in result:
+    output.append(
+        {
+            "show": item["show"],
+            "line_number": item["line_number"],
+            "episode_id": item["episode_id"],
+            "timecode": item["timecode"],
+            "content": item["content"],
+        }
+    )
 
-# else:
-#     print("ep_id is a required field")
+print(output)
+
+
+# rename a collection
+# db = client["dev"]
+# collection = db["sunny_dev"]
+
+# results = collection.rename("sunny")
+
+
+# distinct shows
+# db = client["searchData"]
+
+# print(db.all.distinct("show"))
