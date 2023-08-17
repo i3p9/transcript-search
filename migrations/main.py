@@ -3,9 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 MONGO_URI = os.environ.get("MONGO_URI")
+FOLDER_NAME = os.environ.get("FOLDER_NAME")
+DRY_RUN = False
 
 
-def write_to_db(items: list, current: int, total: int):
+def write_to_db(items: list, current: int, total: int, show_key: str):
     from pymongo.mongo_client import MongoClient
     from pymongo.server_api import ServerApi
 
@@ -20,14 +22,14 @@ def write_to_db(items: list, current: int, total: int):
     # except Exception as e:
     #     print(e)
 
-    db = client["dev"]
-    collection = db["sunny"]
+    db = client["searchData"]
+    collection = db["all"]
     result = collection.insert_many(items)
     if result.acknowledged == True:
         print(f"{current} of {total} inserted successfully")
 
 
-def process_subfile(data_list: list, episode_id: str) -> list:
+def process_subfile(data_list: list, episode_id: str, show_key: str) -> list:
     result = []
     current_dict = None
 
@@ -37,6 +39,7 @@ def process_subfile(data_list: list, episode_id: str) -> list:
                 result.append(current_dict)
 
             current_dict = {
+                "show": show_key,
                 "episode_id": episode_id,
                 "line_number": int(item),
                 "timecode": None,
@@ -58,7 +61,8 @@ def process_subfile(data_list: list, episode_id: str) -> list:
     return result
 
 
-sub_path = f"{os.getcwd()}/migrations/sunny/"
+show_key = os.environ.get("SHOW_KEY")
+sub_path = f"{os.getcwd()}/{FOLDER_NAME}/"
 list_of_files = os.listdir(sub_path)
 
 for i in range(0, len(list_of_files)):
@@ -67,11 +71,16 @@ for i in range(0, len(list_of_files)):
 processed_files = []
 total_episodes = len(list_of_files)
 x = 1
+error_count = 0
 for file in list_of_files:
-    with open(file=file) as f:
-        contents = []
-        file_contents = f.readlines()
-        f.close()
+    try:
+        with open(file=file) as f:
+            contents = []
+            file_contents = f.readlines()
+            f.close()
+    except UnicodeDecodeError:
+        print(f"decodeError with {os.path.basename(file)}")
+        error_count = error_count + 1
     for line in file_contents:
         contents.append(line.strip())
 
@@ -80,7 +89,18 @@ for file in list_of_files:
     processed = process_subfile(
         data_list=data_list,
         episode_id=os.path.basename(file).strip(".txt"),
+        show_key=show_key,
     )
 
-    write_to_db(processed, current=x, total=total_episodes)
+    if not DRY_RUN:
+        write_to_db(processed, current=x, total=total_episodes, show_key=show_key)
+    else:
+        print(f"processed {x} of out {total_episodes}")
     x = x + 1
+
+
+if error_count == 0:
+    if DRY_RUN:
+        print("No decodeErrors, you can false DRY_RUN flag")
+else:
+    print(f"{error_count} decodeErrors, pls check")

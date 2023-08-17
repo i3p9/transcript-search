@@ -1,11 +1,16 @@
 import os
 import re
+from dotenv import load_dotenv
 
-folder_path = "/Users/fahim/Downloads/b99_hi"  # folder path
+load_dotenv()
+
+FOLDER_NAME = os.environ.get("FOLDER_NAME")
+folder_path = f"{os.getcwd()}/{FOLDER_NAME}/"  # folder path
 pattern = r"(S\d+)(E\d+)"  # regex match "Sxx" and "Exx"
 
 for filename in os.listdir(folder_path):
     if filename.endswith(".srt"):  # only process .srt, NOT the video files
+        print(f"processing: {filename}")
         match = re.search(pattern, filename)
         if match:
             season = match.group(1)[1:]
