@@ -14,7 +14,7 @@ async function searchv2(showKey, query, limit, mongoUrl, apiKey) {
 				"$search": {
 					"index": "lines",
 					"compound": {
-						"filter": [
+						"must": [
 							{
 								"text": {
 									"query": query,
@@ -22,7 +22,7 @@ async function searchv2(showKey, query, limit, mongoUrl, apiKey) {
 								}
 							}
 						],
-						"must": [
+						"filter": [
 							{
 								"text": {
 									"query": showKey,
