@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Skeleton.module.css'
 
 function OcularPatdown() {
-  const ocularPatdownPath = `${window.location.hostname}/images/patdown.jpeg`
+  const ocularPatdownPath = `/images/patdown.jpeg`
   return <img className={styles.ocularPatdownImage} src={ocularPatdownPath} alt="mac doing ocular patdown" />
 }
 
