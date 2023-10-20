@@ -32,6 +32,7 @@ function SearchField({ runSearch, selectedShow, setSelectedShow }) {
           <option value="ted_lasso">Ted Lasso</option>
           <option value="new_girl">New Girl</option>
           <option value="parks_and_rec">Parks and Recreation</option>
+          <option value="top_gear">Top Gear</option>
         </select>
       </label>
 

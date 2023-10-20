@@ -1,25 +1,20 @@
-# import json
+#!/usr/bin/python
+import os, sys, datetime, tarfile, os.path
+from bson.json_util import dumps
+from dotenv import load_dotenv
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
-# f = open("episode_data_office.json")
+load_dotenv()
+MONGO_URI = os.environ.get("MONGO_URI")
+uri = MONGO_URI
 
-# data = json.load(f)
+client = MongoClient(uri, server_api=ServerApi("1"))
+db = client["searchData"]
+collection = db["all"]
 
+filter_query = {"show": "SHOWKEY"}
 
-# keylist = data.keys()  # this is of type `dict_key`, NOT a `list`
+count = collection.count_documents(filter_query)
 
-# keylisttype = list(keylist)
-
-# keylisttype.sort()
-
-# print(keylisttype)
-
-# with open("your_file.txt", "w") as f:
-#     for line in keylisttype:
-#         f.write("%s\n" % line)
-
-import os
-
-sub_path = f"{os.getcwd()}/new/"
-list_of_files = os.listdir(sub_path)
-
-print(len(list_of_files))
+# result = collection.delete_many(filter_query)
