@@ -46,7 +46,7 @@ function Home() {
         style={{ font: "Mona Sans", fontWeight: "800", fontStretch: "125%" }}>
         Moment Seeker
       </h1>
-      <SearchField runSearch={runSearch} selectedShow={selectedShow} setSelectedShow={setSelectedShow} />
+      <SearchField runSearch={runSearch} selectedShow={selectedShow} setSelectedShow={setSelectedShow} loading={loading} />
       {loading ? (
         <Skeleton />
       ) : (

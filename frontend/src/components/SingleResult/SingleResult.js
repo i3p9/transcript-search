@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { config } from '../../Constants'
 import styles from './SingleResult.module.css'
+import DotPulse from '../DotPulse/DotPulse';
 
 const apiUrl = config.url.API_URL
 const token = process.env.REACT_APP_AUTH_TOKEN
@@ -34,8 +35,8 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     };
     axios.request(config)
       .then((response) => {
-        console.log('search succ??');
-        console.log(response.data.documents)
+        // console.log('search succ??');
+        // console.log(response.data.documents)
         //setting data.documents to accomodate cf worker
         setContextIsLoading(false)
         setContextLine(response.data.documents);
@@ -50,7 +51,7 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     getEpisodeData(episodeId, selectedShow)
       .then((episodeData) => {
         setCurrentEpisodeInfo(episodeData);
-        console.log(episodeData.name);
+        // console.log(episodeData.name);
       })
       .catch((error) => {
         console.log(error);
@@ -59,7 +60,7 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     //eslint-disable-next-line
   }, []);
 
-  console.log(currentEpisodeInfo)
+  // console.log(currentEpisodeInfo)
 
   //const currentEpisodeInfos = getEpisodeData(episodeId, selectedShow)
 
@@ -114,7 +115,8 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
             }
           }}
         >
-          {showContext ? "Hide Context" : "Show Context"}
+          {contextIsLoading ? <DotPulse text={"..."} /> : showContext ? "Hide Context" : "Show Context"}
+          {/* {showContext ? "Hide Context" : "Show Context"} */}
         </button>
       </div>
     </div>

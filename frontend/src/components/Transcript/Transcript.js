@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { getEpisodeData } from '../../utils/episodeData';
 import { config } from '../../Constants'
+import { shows } from '../../utils/data';
 
 const baseUrl = config.url.BASE_URL;
 
@@ -13,15 +14,13 @@ const Transcript = () => {
 
   const [transcriptData, setTranscriptData] = useState(null)
   const [episodeData, setEpisodeData] = useState()
-  console.log('we are in transcsirpt page somehow?')
-  console.log(variable);
-  //const episodeData = getEpisodeData(episodeId)
+  const showInfo = shows.find(show => show.id === selectedShow)
 
   useEffect(() => {
     getEpisodeData(episodeId, selectedShow)
       .then((episodeData) => {
         setEpisodeData(episodeData);
-        console.log(episodeData.name);
+        console.log(selectedShow);
       })
       .catch((error) => {
         console.log(error);
@@ -61,9 +60,10 @@ const Transcript = () => {
       >
         <h1
           className="text-3xl font-bold py-2"
-          style={{ fontStretch: "80%" }}
+          style={{ fontStretch: "70%" }}
         >
-          Transcript of {episodeId}</h1>
+          {showInfo?.name} - {episodeId}
+        </h1>
         <h2
           className='text-2xl'
           style={{ fontWeight: 600, fontStretch: "90%" }}

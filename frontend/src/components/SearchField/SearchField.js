@@ -1,8 +1,10 @@
 import React from 'react';
 import styles from './SearchField.module.css';
 import { clsx } from 'clsx';
+import DotPulse from '../DotPulse/DotPulse';
+import { shows } from '../../utils/data';
 
-function SearchField({ runSearch, selectedShow, setSelectedShow }) {
+function SearchField({ runSearch, selectedShow, setSelectedShow, loading }) {
   const BarStyle = { width: "20rem", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem" };
   const selectStyle = { width: "18rem", height: "44px", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem", marginRight: "10px", marginLeft: "10px", marginBottom: "5px" };
 
@@ -25,14 +27,11 @@ function SearchField({ runSearch, selectedShow, setSelectedShow }) {
             setSelectedShow(event.target.value)
           }}
         >
-          <option value="sunny">It's Always Sunny in Philadelphia</option>
-          <option value="office_us">The Office (US)</option>
-          <option value="brooklyn_99">Brooklyn Nine-Nine</option>
-          <option value="30_rock">30 Rock</option>
-          <option value="ted_lasso">Ted Lasso</option>
-          <option value="new_girl">New Girl</option>
-          <option value="parks_and_rec">Parks and Recreation</option>
-          <option value="top_gear">Top Gear</option>
+          {shows.map((show, index) => {
+            return (
+              <option value={show.id} key={index}>{show.name}</option>
+            )
+          })}
         </select>
       </label>
 
@@ -46,7 +45,7 @@ function SearchField({ runSearch, selectedShow, setSelectedShow }) {
       <button
         className={clsx((styles.searchButton), 'p-1.5 m-1')}
       >
-        Search
+        {loading ? <DotPulse text={"..."} /> : "Search"}
       </button>
     </form>
   );
