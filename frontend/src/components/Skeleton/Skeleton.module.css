@@ -1,6 +1,19 @@
 .ocularPatdownImage {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+  width: 30%;
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: fadeInOut 2s infinite;
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }

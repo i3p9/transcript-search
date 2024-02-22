@@ -1,12 +1,14 @@
 import React from 'react';
 import styles from './Skeleton.module.css'
+import { loadingImages } from '../../utils/data';
 
-function OcularPatdown() {
-  const ocularPatdownPath = `/images/patdown.jpeg`
-  return <img className={styles.ocularPatdownImage} src={ocularPatdownPath} alt="mac doing ocular patdown" />
+function SkeletonImage({ id }) {
+  const show = loadingImages.find((image) => image.id === id)
+  return <img className={styles.ocularPatdownImage} src={show.url} alt={`loading / placeholder from show ${show.name}`} />
+
 }
 
-function Skeleton() {
+function Skeleton({ selectedShow }) {
   return (
     <>
       <div role="status" class="animate-pulse py-5 px-5">
@@ -18,7 +20,7 @@ function Skeleton() {
         <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
         <span class="sr-only">Loading...</span>
       </div>
-      <OcularPatdown />
+      <SkeletonImage id={selectedShow} />
     </>
   );
 }

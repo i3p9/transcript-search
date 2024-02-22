@@ -48,7 +48,7 @@ function Home() {
       </h1>
       <SearchField runSearch={runSearch} selectedShow={selectedShow} setSelectedShow={setSelectedShow} loading={loading} />
       {loading ? (
-        <Skeleton />
+        <Skeleton selectedShow={selectedShow} />
       ) : (
         <SearchResults results={result} selectedShow={selectedShow} networkError={networkError} />
       )}
