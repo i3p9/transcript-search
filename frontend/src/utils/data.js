@@ -8,6 +8,7 @@ export const shows = [
 	{ id: "parks_and_rec", name: "Parks and Recreation" },
 	{ id: "top_gear", name: "Top Gear" },
 	{ id: "thegrandtour", name: "The Grand Tour" },
+	{ id: "top_gear+thegrandtour", name: "Top Gear + Grand Tour" },
 ];
 
 export const loadingImages = [
@@ -43,5 +44,10 @@ export const loadingImages = [
 		id: "thegrandtour",
 		url: "/images/top_gear.png",
 		name: "The Grand Tour",
+	},
+	{
+		id: "top_gear+thegrandtour",
+		url: "/images/top_gear.png",
+		name: "Top Gear + Grand Tour",
 	},
 ];
