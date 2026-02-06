@@ -22,8 +22,8 @@ function Home() {
 		let config = {
 			method: "get",
 			maxBodyLength: Infinity,
-			url: `${apiUrl}/arg?show_key=${selectedShow}&q=${searchTerm}&limit=${limit}&auth=${token}`,
-			headers: {},
+			url: `${apiUrl}/arg?show_key=${selectedShow}&q=${searchTerm}&limit=${limit}`,
+			headers: { "X-Auth-Token": token },
 		};
 		axios
 			.request(config)

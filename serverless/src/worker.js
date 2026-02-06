@@ -1,7 +1,7 @@
 const corsHeaders = {
 	'Content-Type': 'application/json',
 	'Access-Control-Allow-Origin': '*',
-	'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+	'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
 	'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 	'Access-Control-Max-Age': '86400',
 };
@@ -54,7 +54,7 @@ export default {
 		if (pathname.includes('arg')) {
 			const query = searchParams.get('q');
 			const limit = searchParams.get('limit');
-			const auth = searchParams.get('auth');
+			const auth = request.headers.get('X-Auth-Token');
 			const showKey = searchParams.get('show_key');
 
 			if (!auth || auth !== env.ACCEPTED_KEY) {
@@ -69,7 +69,7 @@ export default {
 		} else if (pathname.includes('context')) {
 			const episodeId = searchParams.get('episode_id');
 			const lineNumber = searchParams.get('line_number');
-			const auth = searchParams.get('auth');
+			const auth = request.headers.get('X-Auth-Token');
 			const showKey = searchParams.get('show_key');
 
 			if (!auth || auth !== env.ACCEPTED_KEY) {
