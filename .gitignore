@@ -33,3 +33,5 @@ serverless/.dev.vars
 serverless/wrangler.toml
 serverless/wrangler.toml
 wrangler.toml
+
+*.wrangler
