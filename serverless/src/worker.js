@@ -1,254 +1,94 @@
-async function searchv2(showKey, query, limit, mongoUrl, apiKey) {
-	console.log('search v2')
-	var myHeaders = new Headers();
-	myHeaders.append("Content-Type", "application/json");
-	myHeaders.append("Access-Control-Request-Headers", "*");
-	myHeaders.append("api-key", apiKey);
+const corsHeaders = {
+	'Content-Type': 'application/json',
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+	'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+	'Access-Control-Max-Age': '86400',
+};
 
-	var raw = JSON.stringify({
-		"collection": "all",
-		"database": "searchData",
-		"dataSource": "transcripts",
-		"pipeline": [
-			{
-				"$search": {
-					"index": "lines",
-					"compound": {
-						"must": [
-							{
-								"text": {
-									"query": query,
-									"path": "content"
-								}
-							}
-						],
-						"filter": [
-							{
-								"text": {
-									"query": showKey,
-									"path": "show"
-								}
-							}
-						]
-					}
-				}
-			},
-			{
-				"$limit": parseInt(limit)
-			}
-		]
-	});
-
-
-	var requestOptions = {
-		method: 'POST',
-		headers: myHeaders,
-		body: raw,
-		redirect: 'follow'
-	};
-
-	try {
-		const response = await fetch(`${mongoUrl}/aggregate`, requestOptions);
-		//const result = await response.json();
-		return response.json();
-	} catch (error) {
-		console.log("error", error);
-		throw error;
-	}
+function jsonResponse(data, status = 200) {
+	return new Response(JSON.stringify(data), { status, headers: corsHeaders });
 }
 
-async function search(series, query, limit, mongoUrl, apiKey) {
-	var myHeaders = new Headers();
-	myHeaders.append("Content-Type", "application/json");
-	myHeaders.append("Access-Control-Request-Headers", "*");
-	myHeaders.append("api-key", apiKey);
+async function searchv2(db, showKey, query, limit) {
+	const shows = showKey.split('+').map((s) => s.trim());
+	const placeholders = shows.map(() => '?').join(', ');
 
-	var raw = JSON.stringify({
-		"collection": series,
-		"database": "dev",
-		"dataSource": "transcripts",
-		"pipeline": [
-			{
-				"$search": {
-					"index": "lines",
-					"text": {
-						"query": query,
-						"path": {
-							"wildcard": "*"
-						}
-					}
-				}
-			},
-			{
-				"$limit": parseInt(limit)
-			}
-		]
-	});
+	const sql = `
+		SELECT t.show, t.episode_id, t.line_number, t.timecode, t.content
+		FROM transcripts_fts fts
+		JOIN transcripts t ON t.id = fts.rowid
+		WHERE transcripts_fts MATCH ?
+		AND t.show IN (${placeholders})
+		ORDER BY rank
+		LIMIT ?
+	`;
 
-	var requestOptions = {
-		method: 'POST',
-		headers: myHeaders,
-		body: raw,
-		redirect: 'follow'
-	};
-
-	try {
-		const response = await fetch(`${mongoUrl}/aggregate`, requestOptions);
-		//const result = await response.json();
-		return response.json();
-	} catch (error) {
-		console.log("error", error);
-		throw error;
-	}
+	const params = [query, ...shows, parseInt(limit)];
+	const { results } = await db.prepare(sql).bind(...params).all();
+	return { documents: results };
 }
 
+async function getContext(db, showKey, episodeId, contextLines) {
+	const placeholders = contextLines.map(() => '?').join(', ');
 
-async function getContext(showKey, episodeId, context_lines, mongoUrl, apiKey) {
-	var myHeaders = new Headers();
-	myHeaders.append("Content-Type", "application/json");
-	myHeaders.append("Access-Control-Request-Headers", "*");
-	myHeaders.append("api-key", apiKey);
+	const sql = `
+		SELECT show, episode_id, line_number, timecode, content
+		FROM transcripts
+		WHERE show = ? AND episode_id = ? AND line_number IN (${placeholders})
+	`;
 
-	var raw = JSON.stringify({
-		"collection": "all",
-		"database": "searchData",
-		"dataSource": "transcripts",
-		"filter": {
-			"show": showKey,
-			"episode_id": episodeId,
-			"line_number": {
-				"$in": context_lines
-			}
-		}
-	});
-
-	var requestOptions = {
-		method: 'POST',
-		headers: myHeaders,
-		body: raw,
-		redirect: 'follow'
-	};
-
-	try {
-		const response = await fetch(`${mongoUrl}/find`, requestOptions);
-		//const result = await response.json();
-		return response.json();
-	} catch (error) {
-		console.log("error", error);
-		throw error;
-	}
+	const params = [showKey, episodeId, ...contextLines];
+	const { results } = await db.prepare(sql).bind(...params).all();
+	return { documents: results };
 }
 
 export default {
-	async fetch(request, env, ctx) {
-		const mongoUrl = await env.MONGO_URL;
-		const apiKey = await env.API_KEY;
+	async fetch(request, env) {
+		const { pathname, searchParams } = new URL(request.url);
 
-		const { pathname, searchParams } = new URL(request.url)
-
-		const headers = {
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Headers": "Content-Type, Authorization",
-			"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-			"Access-Control-Max-Age": "86400",
+		if (request.method === 'OPTIONS') {
+			return new Response(null, { headers: corsHeaders });
 		}
 
-		//search call
-		if (pathname.includes('search')) {
-			const query = searchParams.get('q')
-			const limit = searchParams.get('limit')
-			const auth = searchParams.get('auth')
-			//const showKey = searchParams.get('show_key')
-			const series = pathname.split("/").filter((segment) => segment !== "")[0]
+		if (pathname.includes('arg')) {
+			const query = searchParams.get('q');
+			const limit = searchParams.get('limit');
+			const auth = searchParams.get('auth');
+			const showKey = searchParams.get('show_key');
 
-			//return new Response(env.API_KEY);
-
-			if (auth && auth === env.ACCEPTED_KEY) {
-				if (query && limit && series) {
-					const result = await search(series, query, limit, mongoUrl, apiKey)
-					return new Response(JSON.stringify(result), {
-						headers: {
-							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
-							"Access-Control-Allow-Headers": "Content-Type, Authorization",
-							"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-							"Access-Control-Max-Age": "86400",
-						},
-					});
-				}
-			} else {
-				return new Response("wrong params / auth / search v1", { headers: headers });
+			if (!auth || auth !== env.ACCEPTED_KEY) {
+				return jsonResponse({ error: 'wrong params / auth / searchv2' }, 401);
 			}
-		}
-		//search v2
-		else if (pathname.includes('arg')) {
-			const query = searchParams.get('q')
-			const limit = searchParams.get('limit')
-			const auth = searchParams.get('auth')
-			const showKey = searchParams.get('show_key')
-			//const series = pathname.split("/").filter((segment) => segment !== "")[0]
-
-			//return new Response(env.API_KEY);
-
-			if (auth && auth === env.ACCEPTED_KEY) {
-				if (query && limit && showKey) {
-					const result = await searchv2(showKey, query, limit, mongoUrl, apiKey)
-					return new Response(JSON.stringify(result), {
-						headers: {
-							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
-							"Access-Control-Allow-Headers": "Content-Type, Authorization",
-							"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-							"Access-Control-Max-Age": "86400",
-						},
-					});
-				}
-			} else {
-				return new Response("wrong params / auth / searchv2", { headers: headers });
-			}
-		}
-
-		//context call
-		else if (pathname.includes('context')) {
-			const episodeId = searchParams.get('episode_id')
-			const lineNumber = searchParams.get('line_number')
-			const auth = searchParams.get('auth')
-			const showKey = searchParams.get('show_key')
-			//const series = pathname.split("/").filter((segment) => segment !== "")[0]
-			let context_lines = [];
-
-			if (lineNumber) {
-				const numberLine = parseInt(lineNumber)
-				if (numberLine > 1) {
-					context_lines = [numberLine - 1, numberLine, numberLine + 1];
-				} else {
-					context_lines = [numberLine, numberLine + 1];
-				}
+			if (!query || !limit || !showKey) {
+				return jsonResponse({ error: 'missing required params' }, 400);
 			}
 
-			if (auth && auth === env.ACCEPTED_KEY) {
-				if (episodeId && lineNumber && auth) {
-					const result = await getContext(showKey, episodeId, context_lines, mongoUrl, apiKey)
-					return new Response(JSON.stringify(result), {
-						headers: {
-							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
-							"Access-Control-Allow-Headers": "Content-Type, Authorization",
-							"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-							"Access-Control-Max-Age": "86400",
-						},
-					});
+			const result = await searchv2(env.DB, showKey, query, limit);
+			return jsonResponse(result);
+		} else if (pathname.includes('context')) {
+			const episodeId = searchParams.get('episode_id');
+			const lineNumber = searchParams.get('line_number');
+			const auth = searchParams.get('auth');
+			const showKey = searchParams.get('show_key');
 
-				}
-			} else {
-				return new Response(`auth error`, { headers: headers })
+			if (!auth || auth !== env.ACCEPTED_KEY) {
+				return jsonResponse({ error: 'auth error' }, 401);
 			}
-			return new Response(`wrong params`, { headers: headers });
+			if (!episodeId || !lineNumber || !showKey) {
+				return jsonResponse({ error: 'wrong params' }, 400);
+			}
+
+			const numberLine = parseInt(lineNumber);
+			const contextLines =
+				numberLine > 1
+					? [numberLine - 1, numberLine, numberLine + 1]
+					: [numberLine, numberLine + 1];
+
+			const result = await getContext(env.DB, showKey, episodeId, contextLines);
+			return jsonResponse(result);
 		}
-		else {
-			return new Response('invalid request', { headers: headers })
-		}
+
+		return jsonResponse({ error: 'invalid request' }, 404);
 	},
 };
-
