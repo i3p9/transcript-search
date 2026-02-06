@@ -20,11 +20,12 @@ function Home() {
 		//console.log(process.env.REACT_APP_AUTH_TOKEN)
 		setLoading(true);
 		setHasSearched(true);
+		setResult(null);
 		const limit = 12;
 		let config = {
 			method: "get",
 			maxBodyLength: Infinity,
-			url: `${apiUrl}/arg?show_key=${selectedShow}&q=${searchTerm}&limit=${limit}`,
+			url: `${apiUrl}/arg?show_key=${encodeURIComponent(selectedShow)}&q=${encodeURIComponent(searchTerm)}&limit=${limit}`,
 			headers: { "X-Auth-Token": token },
 		};
 		axios
@@ -57,7 +58,8 @@ function Home() {
 						shows
 					</p>
 					<p className='text-sm text-brand-brown/60'>
-						Type a quote. Find the episode. Relive the moment.
+						Type a quote. Find the episode. Scratch that annoying
+						itch.
 					</p>
 				</div>
 			)}
@@ -66,11 +68,16 @@ function Home() {
 				selectedShow={selectedShow}
 				setSelectedShow={setSelectedShow}
 				loading={loading}
+				setResult={setResult}
 			/>
 			{loading ? (
 				<Skeleton selectedShow={selectedShow} />
 			) : (
-				<SearchResults results={result} networkError={networkError} />
+				<SearchResults
+					results={result}
+					networkError={networkError}
+					selectedShow={selectedShow}
+				/>
 			)}
 		</div>
 	);

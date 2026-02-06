@@ -57,25 +57,34 @@ const Transcript = () => {
       >
         &larr; Back to Search
       </button>
-      <div className='border-3 border-brand-brown p-4 md:p-6 mb-4'>
-        <h1
-          className='text-3xl font-black text-brand-brown pb-1'
-          style={{ fontStretch: "125%" }}
-        >
-          {showInfo?.name} - {episodeId}
-        </h1>
-        <p
-          className='text-2xl text-brand-brown'
-          style={{ fontWeight: 600, fontStretch: "90%" }}
-        >
-          {episodeData?.name}
-        </p>
-        <p
-          className='text-brand-brown/80 italic pt-1'
-          style={{ fontStretch: "110%" }}
-        >
-          Episode overview: {episodeData?.overview}
-        </p>
+      <div className='border-3 border-brand-brown p-4 md:p-6 mb-4 flex items-start justify-between gap-4'>
+        <div>
+          <h1
+            className='text-3xl font-black text-brand-brown pb-1'
+            style={{ fontStretch: "125%" }}
+          >
+            {showInfo?.name} - {episodeId}
+          </h1>
+          <p
+            className='text-2xl text-brand-brown'
+            style={{ fontWeight: 600, fontStretch: "90%" }}
+          >
+            {episodeData?.name}
+          </p>
+          <p
+            className='text-brand-brown/80 italic pt-1'
+            style={{ fontStretch: "110%" }}
+          >
+            Episode overview: {episodeData?.overview}
+          </p>
+        </div>
+        {showInfo?.logo && (
+          <img
+            src={showInfo.logo}
+            alt={showInfo.name}
+            className='h-12 md:h-16 shrink-0'
+          />
+        )}
       </div>
       {transcriptData?.map((line, index) => {
         const isHighlighted = line.line_number === parseInt(variable);

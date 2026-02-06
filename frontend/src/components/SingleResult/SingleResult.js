@@ -8,7 +8,7 @@ import DotPulse from '../DotPulse/DotPulse';
 const apiUrl = config.url.API_URL
 const token = process.env.REACT_APP_AUTH_TOKEN
 
-function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }) {
+function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow, accentColor }) {
   const [isHovering, setIsHovering] = React.useState(false)
   const [contextLine, setContextLine] = React.useState(null)
   const [showContext, setShowContext] = React.useState(false)
@@ -63,21 +63,31 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
   };
 
   return (
-    <div className='border-3 border-brand-brown shadow-brutal'>
+    <div
+      className='border-3 border-brand-brown'
+      style={{ boxShadow: `3px 3px 0px ${accentColor}` }}
+    >
       {showContext ? (
         contextIsLoading ? (
-          <div className='bg-brand-yellow text-brand-brown italic p-3'>
+          <div
+            className='text-brand-brown italic p-3'
+            style={{ backgroundColor: accentColor }}
+          >
             {content}...
           </div>
         ) : (
           contextLine?.map((line, index) => (
             <div
               key={index}
-              className='bg-brand-yellow text-brand-brown italic p-3 border-b border-brand-brown/20 last:border-b-0'
+              className='text-brand-brown italic p-3 border-b border-brand-brown/20 last:border-b-0'
+              style={{ backgroundColor: accentColor }}
             >{line.content}</div>
           )))
       ) : (
-        <div className='bg-brand-yellow text-brand-brown italic p-3'>
+        <div
+          className='text-brand-brown italic p-3'
+          style={{ backgroundColor: accentColor }}
+        >
           {content}
         </div>
       )}
