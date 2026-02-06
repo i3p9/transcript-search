@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getEpisodeData } from '../../utils/episodeData';
 import { config } from '../../Constants'
 import { shows } from '../../utils/data';
@@ -15,16 +15,15 @@ const Transcript = () => {
   const [transcriptData, setTranscriptData] = useState(null)
   const [episodeData, setEpisodeData] = useState()
   const showInfo = shows.find(show => show.id === selectedShow)
+  const navigate = useNavigate();
 
   useEffect(() => {
     getEpisodeData(episodeId, selectedShow)
       .then((episodeData) => {
         setEpisodeData(episodeData);
-        console.log(selectedShow);
       })
       .catch((error) => {
         console.log(error);
-        // Handle errors here
       });
     //eslint-disable-next-line
   }, []);
@@ -32,7 +31,6 @@ const Transcript = () => {
   useEffect(() => {
     const fetchTranscriptData = async () => {
       try {
-        // Load the JSON file and parse it into an object
         const response = await fetch(`${baseUrl}/json/${selectedShow}/${episodeId}.json`);
         const data = await response.json();
         setTranscriptData(data);
@@ -51,67 +49,69 @@ const Transcript = () => {
 
   }, [transcriptData])
 
-  // TODO: redo design with mobile thinking
   return (
-    <div className='px-5 sm:px-3 md:px-10 container md mx-auto py-2 mb-10'>
-      <div
-        className='py-0'
-        style={{ border: "2px solid #4F200D", marginBottom: "10px" }}
+    <div className='px-4 sm:px-3 md:px-10 container mx-auto py-2 mb-10'>
+      <button
+        onClick={() => navigate('/')}
+        className='mb-3 px-4 py-2 bg-brand-brown text-white font-bold border-3 border-brand-brown shadow-brutal hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all'
       >
+        &larr; Back to Search
+      </button>
+      <div className='border-3 border-brand-brown p-4 md:p-6 mb-4'>
         <h1
-          className="text-3xl font-bold py-2"
-          style={{ fontStretch: "70%" }}
+          className='text-3xl font-black text-brand-brown pb-1'
+          style={{ fontStretch: "125%" }}
         >
           {showInfo?.name} - {episodeId}
         </h1>
-        <h2
-          className='text-2xl'
+        <p
+          className='text-2xl text-brand-brown'
           style={{ fontWeight: 600, fontStretch: "90%" }}
         >
           {episodeData?.name}
-        </h2>
-        <h2
-          style={{ fontWeight: 400, fontStretch: "110%", fontStyle: "italic" }}
+        </p>
+        <p
+          className='text-brand-brown/80 italic pt-1'
+          style={{ fontStretch: "110%" }}
         >
           Episode overview: {episodeData?.overview}
-        </h2>
+        </p>
       </div>
       {transcriptData?.map((line, index) => {
-        if (line.line_number === parseInt(variable)) {
-          return ( //highlighted line
+        const isHighlighted = line.line_number === parseInt(variable);
+        const isOdd = index % 2 === 1;
+
+        if (isHighlighted) {
+          return (
             <div
-              className='flex flex-col md:flex-row justify-items-start content-evenly'
-              style={{ border: "2px solid #FF8400", borderRadius: "0px" }}
+              className='flex flex-col md:flex-row border-3 border-brand-orange my-1'
               key={index}
               id='highlighed-line'
             >
-              <div
-                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1'
-                style={{ color: "#4F200D", backgroundColor: "#FFD93D" }}
-              >{line.line_number} : {line.timecode}</div>
-              <div
-                className='text-lg pl-2 basis-3/4 md:basis-1/8'
-                style={{ marginLeft: "none", backgroundColor: "rgba(79, 32, 13, 0.1)", color: "#4F200D" }}
-              >{line.content}</div>
+              <div className='md:w-48 shrink-0 px-3 py-2 font-mono text-xs text-brand-brown bg-brand-yellow'>
+                {line.line_number} : {line.timecode}
+              </div>
+              <div className='flex-1 px-3 py-2 font-medium text-lg text-brand-brown bg-brand-yellow/30'>
+                {line.content}
+              </div>
             </div>
           )
-
-        } else { //regular transcript
+        } else {
           return (
-            <div className='flex flex-col md:flex-row justify-items-start content-evenly border' key={index}>
-              <div
-                className='text-gray-700 pl-2 basis-1/4 md:basis-1/1'
-                style={{ color: "#4F200D", backgroundColor: "#FFD93D" }}
-              >{line.line_number} : {line.timecode}</div>
-              <div
-                className='text-lg pl-2 basis-3/4 md:basis-1/8'
-                style={{ marginLeft: "none", backgroundColor: "rgba(79, 32, 13, 0.1)", color: "#4F200D" }}
-              >{line.content}</div>
+            <div
+              className={`flex flex-col md:flex-row border-b border-brand-brown/10 ${isOdd ? 'bg-brand-brown/5' : ''}`}
+              key={index}
+            >
+              <div className='md:w-48 shrink-0 px-3 py-1 font-mono text-xs text-brand-brown/50'>
+                {line.line_number} : {line.timecode}
+              </div>
+              <div className='flex-1 px-3 py-1 text-brand-brown'>
+                {line.content}
+              </div>
             </div>
           )
         }
       })}
-
     </div>
   );
 };

@@ -1,28 +1,22 @@
 import React from 'react';
-import styles from './SearchField.module.css';
-import { clsx } from 'clsx';
 import DotPulse from '../DotPulse/DotPulse';
 import { shows } from '../../utils/data';
 
 function SearchField({ runSearch, selectedShow, setSelectedShow, loading }) {
-  const BarStyle = { width: "20rem", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem" };
-  const selectStyle = { width: "18rem", height: "44px", background: "#F0F0F0", border: "2px solid #4F200D", padding: "0.5rem", marginRight: "10px", marginLeft: "10px", marginBottom: "5px" };
-
   const [searchTerm, setSearchTerm] = React.useState("")
   return (
     <form
-      className="search-form p-2"
+      className="flex flex-col md:flex-row items-center justify-center gap-2 p-4"
       onSubmit={(event) => {
         event.preventDefault();
         runSearch(selectedShow, searchTerm)
       }}
     >
-      <label>Pick a show:
+      <label className='text-brand-brown font-semibold'>
+        Pick a show:
         <select
-          // className='mb-2'
           value={selectedShow}
-          style={selectStyle}
-          key="select-show"
+          className='w-full md:w-72 h-11 bg-gray-100 border-3 border-brand-brown p-2 ml-0 md:ml-2'
           onChange={event => {
             setSelectedShow(event.target.value)
           }}
@@ -36,14 +30,13 @@ function SearchField({ runSearch, selectedShow, setSelectedShow, loading }) {
       </label>
 
       <input
-        style={BarStyle}
-        key="search-bar"
+        className='w-full md:w-80 h-11 bg-gray-100 border-3 border-brand-brown p-2'
         value={searchTerm}
-        // placeholder={"Search for sunny episodes"}
+        placeholder="What did they say again?"
         onChange={(event) => setSearchTerm(event.target.value)}
       />
       <button
-        className={clsx((styles.searchButton), 'p-1.5 m-1')}
+        className='h-11 px-6 bg-brand-brown text-white font-bold border-3 border-brand-brown shadow-brutal hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all'
       >
         {loading ? <DotPulse text={"..."} /> : "Search"}
       </button>

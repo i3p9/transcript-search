@@ -3,7 +3,6 @@ import { getEpisodeData } from '../../utils/episodeData';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { config } from '../../Constants'
-import styles from './SingleResult.module.css'
 import DotPulse from '../DotPulse/DotPulse';
 
 const apiUrl = config.url.API_URL
@@ -35,8 +34,6 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     };
     axios.request(config)
       .then((response) => {
-        // console.log('search succ??');
-        // console.log(response.data.documents)
         //setting data.documents to accomodate cf worker
         setContextIsLoading(false)
         setContextLine(response.data.documents);
@@ -51,18 +48,12 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
     getEpisodeData(episodeId, selectedShow)
       .then((episodeData) => {
         setCurrentEpisodeInfo(episodeData);
-        // console.log(episodeData.name);
       })
       .catch((error) => {
         console.log(error);
-        // Handle errors here
       });
     //eslint-disable-next-line
   }, []);
-
-  // console.log(currentEpisodeInfo)
-
-  //const currentEpisodeInfos = getEpisodeData(episodeId, selectedShow)
 
   const navigate = useNavigate();
 
@@ -72,39 +63,43 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
   };
 
   return (
-    <div className='border-solid border-2 grid' style={{ borderColor: "#4F200D" }}>
+    <div className='border-3 border-brand-brown shadow-brutal'>
       {showContext ? (
         contextIsLoading ? (
-          <div
-            className={`${styles.resultContentSingle} p-1`}
-          >{content}...</div>
+          <div className='bg-brand-yellow text-brand-brown italic p-3'>
+            {content}...
+          </div>
         ) : (
           contextLine?.map((line, index) => (
             <div
               key={index}
-              className={styles.resultContentMultiple}
+              className='bg-brand-yellow text-brand-brown italic p-3 border-b border-brand-brown/20 last:border-b-0'
             >{line.content}</div>
           )))
       ) : (
-        <div
-          className={`${styles.resultContentSingle} p-1`}
-        >{content}</div>
+        <div className='bg-brand-yellow text-brand-brown italic p-3'>
+          {content}
+        </div>
       )}
       <div
-        className={styles.episodeName}
+        className='px-3 py-1 text-brand-brown/90 font-medium'
+        style={{ fontStretch: "125%" }}
       >{episodeId} ({currentEpisodeInfo?.name})</div>
       <div
-        className={styles.lineNumber}
+        className='px-3 pb-1 text-brand-brown/70 text-sm'
+        style={{ fontStretch: "80%" }}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       >{timeCode} {isHovering && `| Line: ${lineNumber}`}</div>
-      <div className='p-1 grid grid-cols-2'>
+      <div className='grid grid-cols-2 border-t-3 border-brand-brown'>
         <button
-          className={styles.button}
+          className='bg-brand-brown text-white font-semibold py-2 border-r border-brand-cream/30 hover:bg-brand-brown/90 transition-colors'
+          style={{ fontStretch: "125%" }}
           onClick={handleClick}
         >Go to Episode</button>
         <button
-          className={styles.button}
+          className='bg-brand-brown text-white font-semibold py-2 hover:bg-brand-brown/90 transition-colors'
+          style={{ fontStretch: "125%" }}
           onClick={(event) => {
             event.preventDefault()
             if (showContext === true) {
@@ -116,7 +111,6 @@ function SingleResult({ episodeId, content, timeCode, lineNumber, selectedShow }
           }}
         >
           {contextIsLoading ? <DotPulse text={"..."} /> : showContext ? "Hide Context" : "Show Context"}
-          {/* {showContext ? "Hide Context" : "Show Context"} */}
         </button>
       </div>
     </div>

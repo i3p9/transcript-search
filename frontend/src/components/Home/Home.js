@@ -13,11 +13,13 @@ function Home() {
 	const [result, setResult] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [networkError, setNetworkError] = React.useState(false);
+	const [hasSearched, setHasSearched] = React.useState(false);
 
 	//TODO Secrect imple,ent via env
 	function runSearch(selectedShow, searchTerm) {
 		//console.log(process.env.REACT_APP_AUTH_TOKEN)
 		setLoading(true);
+		setHasSearched(true);
 		const limit = 12;
 		let config = {
 			method: "get",
@@ -43,15 +45,22 @@ function Home() {
 	return (
 		<div className='container mx-auto'>
 			<h1
-				className='text-3xl font-bold pt-2'
-				style={{
-					font: "Mona Sans",
-					fontWeight: "800",
-					fontStretch: "125%",
-				}}
+				className='text-5xl md:text-6xl font-black pt-6 pb-2 text-brand-brown'
+				style={{ fontStretch: "125%" }}
 			>
 				Moment Seeker
 			</h1>
+			{!hasSearched && (
+				<div className='pb-4'>
+					<p className='text-lg text-brand-brown/80 font-semibold'>
+						Search through <span className='italic'>my</span> favorite
+						shows
+					</p>
+					<p className='text-sm text-brand-brown/60'>
+						Type a quote. Find the episode. Relive the moment.
+					</p>
+				</div>
+			)}
 			<SearchField
 				runSearch={runSearch}
 				selectedShow={selectedShow}

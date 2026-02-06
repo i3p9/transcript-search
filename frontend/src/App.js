@@ -7,7 +7,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
-    <div className="App" style={{ backgroundColor: "#F6F1E9" }}>
+    <div className="App bg-brand-cream min-h-screen">
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/:selectedShow/episode/:episodeId" Component={Transcript} />
